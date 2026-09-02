@@ -1,0 +1,71 @@
+{
+	"name": "Flutter FastAPI",
+	"image": "gmeligio/flutter-android:3.44.4",
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"username": "flutter",
+			"userUid": "1001",
+			"userGid": "1001",
+			"installZsh": true,
+			"upgradePackages": false
+		},
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "21",
+			"jdkDistro": "tem"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.13",
+			"installTools": false
+		},
+		"ghcr.io/devcontainer-community/devcontainer-features/astral.sh-uv:1": {
+			"version": "latest",
+			"shellautocompletion": true
+		}
+	},
+	"remoteUser": "flutter",
+	"containerEnv": {
+		"FLUTTER_ROOT": "/home/flutter/sdks/flutter",
+		"ANDROID_HOME": "/home/flutter/sdks/android-sdk",
+		"ANDROID_SDK_ROOT": "/home/flutter/sdks/android-sdk",
+		"UV_LINK_MODE": "copy"
+	},
+	"remoteEnv": {
+		"PATH": "/home/flutter/sdks/flutter/bin:/home/flutter/sdks/flutter/bin/cache/dart-sdk/bin:/home/flutter/sdks/android-sdk/cmdline-tools/latest/bin:/home/flutter/sdks/android-sdk/platform-tools:${containerEnv:PATH}"
+	},
+	"postCreateCommand": "uv sync --frozen && flutter config --enable-web && flutter precache --web && flutter pub get",
+	"updateContentCommand": "uv sync --frozen && flutter config --enable-web && flutter pub get",
+	"forwardPorts": [
+		9090,
+		9999
+	],
+	"portsAttributes": {
+		"9090": {
+			"label": "Flutter web"
+		},
+		"9999": {
+			"label": "FastAPI"
+		}
+	},
+	"customizations": {
+		"codespaces": {
+			"openFiles": [
+				"README.md",
+				"lib/main.dart",
+				"server/app.py"
+			]
+		},
+		"vscode": {
+			"extensions": [
+				"dart-code.dart-code",
+				"dart-code.flutter",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"charliermarsh.ruff"
+			],
+			"settings": {
+				"python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+				"python.terminal.activateEnvironment": true
+			}
+		}
+	}
+}

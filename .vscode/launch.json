@@ -1,0 +1,47 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Flutter",
+      "type": "dart",
+      "request": "launch",
+      "console": "debugConsole",
+      "program": "lib/main.dart",
+      "args": [
+        "-d",
+        "web-server",
+        "--web-hostname",
+        "0.0.0.0",
+        "--web-port",
+        "9090"
+      ]
+    },
+    {
+      "name": "Run FastAPI",
+      "type": "debugpy",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "module": "uvicorn",
+      "args": [
+        "server:app",
+        "--port",
+        "9999",
+        "--reload"
+      ],
+      "jinja": true,
+      "justMyCode": true,
+      "env": {
+        "PYTHON_ENV": "development"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Run All",
+      "configurations": [
+        "Run FastAPI",
+        "Run Flutter"
+      ]
+    }
+  ]
+}
