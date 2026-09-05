@@ -21,28 +21,41 @@ class Application extends StatelessWidget {
 
   Application({super.key});
 
+  Future<void> _handleIncrement() async {
+    final r = await api.inc();
+    if (r.hasError || r.body == null) {
+      return;
+    }
+
+    final n = r.body!['n'];
+    if (n is int) {
+      count(n);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Flutter FastAPI')),
-        body: Obx(() => Center(child: Text('clicked $count times'))),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final r = await api.inc();
-            if (r.hasError || r.body == null) {
-              return;
-            }
-
-            final n = r.body!['n'];
-            if (n is int) {
-              count(n);
-            }
-          },
-          child: const Icon(Icons.add),
-        ),
+      title: 'Stress App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2D79F3)),
+        fontFamily: 'Roboto',
+      ),
+      home: LoginScreen(
+        onLoginSuccess: () async {
+          Get.offAll(() => LoadingScreen(
+                statusText: 'Breathe in... Preparing your wellness space',
+                autoNavigateAfter: const Duration(milliseconds: 2500),
+                onComplete: () {
+                  Get.offAll(() => HomeScreen(
+                        count: count,
+                        onIncrement: _handleIncrement,
+                      ));
+                },
+              ));
+        },
       ),
     );
   }
