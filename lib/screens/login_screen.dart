@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/login_form.dart';
+import '../widgets/nature_scene_background.dart';
 
 /// Full-screen Responsive Login Screen for Gen-Z Wellness / Stress-Management App.
 class LoginScreen extends StatefulWidget {
@@ -177,37 +178,71 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const navy = Color(0xFF11184F);
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFFAF9F6), Color(0xFFEEF3F0)],
-          ),
-        ),
+      body: NatureSceneBackground(
         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
               return SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight - 48 > 0 ? constraints.maxHeight - 48 : constraints.maxHeight),
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - 32 > 0 ? constraints.maxHeight - 32 : constraints.maxHeight,
+                  ),
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          'Welcome Back',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.5,
-                            color: Color(0xFF151717),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            onTap: () => Get.back(),
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.92),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: navy, width: 1.8),
+                                boxShadow: const [
+                                  BoxShadow(color: navy, offset: Offset(0, 3)),
+                                ],
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.arrow_back_ios_new_rounded, size: 13, color: navy),
+                                  SizedBox(width: 6),
+                                  Text('Tests', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: navy)),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.88),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: Colors.white, width: 1.5),
+                            boxShadow: [
+                              BoxShadow(color: navy.withValues(alpha: 0.10), blurRadius: 16, offset: const Offset(0, 4)),
+                            ],
+                          ),
+                          child: const Text(
+                            'Welcome Back',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.5,
+                              color: navy,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
                         UiverseLoginForm(
                           emailController: _emailCtrl,
                           passwordController: _passCtrl,
