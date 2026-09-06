@@ -1,37 +1,7 @@
 part of 'app.dart';
 
-class APIClient extends GetConnect {
-  @override
-  void onInit() {
-    super.onInit();
-    final isDev = !const bool.fromEnvironment('dart.vm.product');
-    if (isDev) {
-      baseUrl = 'http://localhost:9999';
-    }
-  }
-
-  Future<Response<Map<String, dynamic>>> inc() async {
-    return post<Map<String, dynamic>>('/inc', {});
-  }
-}
-
 class Application extends StatelessWidget {
-  final APIClient api = Get.put(APIClient());
-  final RxInt count = 0.obs;
-
-  Application({super.key});
-
-  Future<void> _handleIncrement() async {
-    final r = await api.inc();
-    if (r.hasError || r.body == null) {
-      return;
-    }
-
-    final n = r.body!['n'];
-    if (n is int) {
-      count(n);
-    }
-  }
+  const Application({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,23 +10,49 @@ class Application extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2D79F3)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFF3A8CF)),
         fontFamily: 'Roboto',
       ),
-      home: LoginScreen(
-        onLoginSuccess: () async {
-          Get.offAll(() => LoadingScreen(
-                statusText: 'Breathe in... Preparing your wellness space',
-                autoNavigateAfter: const Duration(milliseconds: 2500),
-                onComplete: () {
-                  Get.offAll(() => HomeScreen(
-                        count: count,
-                        onIncrement: _handleIncrement,
-                      ));
-                },
-              ));
-        },
+      home: SelfTestsScreen(
+        onBackToLogin: () => Get.toNamed('/login'),
       ),
+      getPages: [
+        GetPage(
+          name: '/home',
+          page: () => SelfTestsScreen(
+            onBackToLogin: () => Get.toNamed('/login'),
+          ),
+        ),
+        GetPage(
+          name: '/login',
+          page: () => LoginScreen(
+            onLoginSuccess: () async {
+              Get.offAllNamed('/home');
+            },
+          ),
+        ),
+        GetPage(
+          name: '/nature',
+          page: () => Scaffold(
+            body: NatureSceneBackground(
+              child: Center(
+                child: PlayfulCartoonButton(
+                  text: 'Start Journey',
+                  icon: Icons.spa_rounded,
+                  onPressed: () => Get.toNamed('/home'),
+                ),
+              ),
+            ),
+          ),
+        ),
+        GetPage(
+          name: '/loading',
+          page: () => LoadingScreen(
+            autoNavigateAfter: const Duration(seconds: 2),
+            onComplete: () => Get.offAllNamed('/home'),
+          ),
+        ),
+      ],
     );
   }
 }
